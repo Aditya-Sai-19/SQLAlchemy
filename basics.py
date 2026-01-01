@@ -12,8 +12,8 @@
 from shlex import join
 from sqlalchemy import create_engine,MetaData,Table,Column,Integer,Float,String,ForeignKey,func                          #text,insert
 import sqlite3
-engine = create_engine('sqlite:///mydatabase.db', echo=True)
 
+engine = create_engine('sqlite:///mydatabase.db', echo=True)
 meta = MetaData()
 
 people = Table(
@@ -53,6 +53,8 @@ insert_things = things.insert().values([
     {'Owner':4,'description':'Computer','value':1000.00},
     {'Owner':5,'description':'Mouse','value':9.89}
 ])
+
+
 
 # group_by_statement = things.select().with_only_columns(things.c.Owner,func.sum(things.c.value)).group_by(things.c.Owner).having(func.sum(things.c.value) > 50)
 # result = conn.execute(group_by_statement)
