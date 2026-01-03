@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine,Integer,String,Column,Float,ForeignKey
+from sqlalchemy import create_engine,Integer,String,Column,Float,ForeignKey,func
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 engine = create_engine('sqlite:///mydatabase.db',echo = True)
@@ -27,14 +27,61 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-new_person = Person(name='Charlie',age=19)
-session.add(new_person)
-session.flush()
+result = session.query(Thing.owner,func.sum(Thing.value)).group_by(Thing.owner).all()
+print(result)
 
-new_thing = Thing(description='Camera', value=500, owner=new_person.id)
-session.add(new_thing)
+session.close()
 
-session.commit()
+# result = session.query(Person.name,Thing.description).join(Thing).all()
+
+# print(result)
+
+
+
+# result = session.query(Person).filter(Person.name == 'Charlie').update({'name':'Charles'})
+# session.commit()
+
+# result = session.query(Person.name).all()
+
+# print(result)
+
+
+
+# result = session.query(Thing).filter(Thing.value < 50).delete()
+# session.commit()
+
+# result = session.query(Thing).filter(Thing.value < 50).all()
+
+# print([t.description for t in result])
+
+
+
+# result = session.query(Thing).filter(Thing.value < 50).all()
+
+# print([t.description for t in result])
+
+
+
+# result = session.query(Person.name , Person.age).all()
+
+# print(result)
+
+
+
+# result = session.query(Person).filter(Person.age > 50).all()
+
+# print([p.name for p in result])
+
+
+
+# new_person = Person(name='Charlie',age=19)
+# session.add(new_person)
+# session.flush()
+
+# new_thing = Thing(description='Camera', value=500, owner=new_person.id)
+# session.add(new_thing)
+
+# session.commit()
     
-print([t.description for t in new_person.things])
-print(new_thing.person.name)
+# print([t.description for t in new_person.things])
+# print(new_thing.person.name)
