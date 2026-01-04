@@ -1,36 +1,45 @@
+import pandas as pd
 from sqlalchemy import create_engine,Integer,String,Column,Float,ForeignKey,func
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 engine = create_engine('sqlite:///mydatabase.db',echo = True)
 
-Base = declarative_base()
+df = pd.read_sql("SELECT * FROM people",con = engine)
+print(df)
 
-class Person(Base):
-    __tablename__ = 'people'
-    id = Column(Integer,primary_key=True)
-    name = Column(String,nullable=False)
-    age = Column(Integer)
+# new_data = pd.DataFrame({'name':['Florian','Jack'],'age':['26','29']})
+# new_data.to_sql('people',con=engine,if_exists='append',index=False)
 
-    things = relationship('Thing',back_populates='person')
+# Base = declarative_base()
 
-class Thing(Base):
-    __tablename__ = 'things'
-    id = Column(Integer,primary_key=True)
-    description = Column(String,nullable=False)
-    value = Column(Float)
-    owner = Column(Integer,ForeignKey('people.id'))
+# class Person(Base):
+#     __tablename__ = 'people'
+#     id = Column(Integer,primary_key=True)
+#     name = Column(String,nullable=False)
+#     age = Column(Integer)
 
-    person = relationship('Person',back_populates='things')
+#     things = relationship('Thing',back_populates='person')
 
-Base.metadata.create_all(engine)
+# class Thing(Base):
+#     __tablename__ = 'things'
+#     id = Column(Integer,primary_key=True)
+#     description = Column(String,nullable=False)
+#     value = Column(Float)
+#     owner = Column(Integer,ForeignKey('people.id'))
 
-Session = sessionmaker(bind=engine)
-session = Session()
+#     person = relationship('Person',back_populates='things')
 
-result = session.query(Thing.owner,func.sum(Thing.value)).group_by(Thing.owner).all()
-print(result)
+# Base.metadata.create_all(engine)
 
-session.close()
+# Session = sessionmaker(bind=engine)
+# session = Session()
+
+# result = session.query(Thing.owner,func.sum(Thing.value)).group_by(Thing.owner).all()
+# print(result)
+
+# session.close()
+
+
 
 # result = session.query(Person.name,Thing.description).join(Thing).all()
 
